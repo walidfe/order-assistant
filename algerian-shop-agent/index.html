@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion des commandes - Algérie</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow" data-i18n="eyebrow">Assistant de commande</p>
+          <h1 data-i18n="appTitle">Gestion des commandes</h1>
+        </div>
+
+        <div class="header-actions">
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon">🌙</span>
+          </button>
+
+          <div class="lang-switcher" aria-label="Language selector">
+            <button type="button" class="lang-btn active" data-lang="fr">FR</button>
+            <button type="button" class="lang-btn" data-lang="ar">AR</button>
+            <button type="button" class="lang-btn" data-lang="en">EN</button>
+          </div>
+
+          <div class="toolbar">
+            <label>
+              <span data-i18n="filterWilaya">Filtrer par wilaya</span>
+              <select id="filterWilaya" aria-label="Filtrer par wilaya"></select>
+            </label>
+
+            <label>
+              <span data-i18n="statusLabel">Statut</span>
+              <select id="filterStatus" aria-label="Filtrer par statut">
+                <option value="all" data-i18n="allStatuses">Tous</option>
+                <option value="Pending" data-i18n="pendingStatus">En attente</option>
+                <option value="Shipped" data-i18n="shippedStatus">Expédiée</option>
+                <option value="Delivered" data-i18n="deliveredStatus">Livrée</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </header>
+
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <span class="status-pill"><span class="dot"></span><span data-i18n="liveStatus">En ligne</span></span>
+          <h2 data-i18n="heroTitle">Suivi des commandes locales</h2>
+          <p data-i18n="heroText">Analyse, validation et suivi rapide des commandes pour les commerçants algériens.</p>
+        </div>
+        <div id="deliveryLottie" class="lottie-box" aria-label="Commande et livraison animation"></div>
+      </section>
+
+      <nav class="tab-nav" aria-label="Main navigation">
+        <button type="button" id="dashboardTab" class="tab-btn active">Dashboard &amp; Analytics</button>
+        <button type="button" id="ordersTab" class="tab-btn">Orders</button>
+      </nav>
+
+      <section id="dashboardView" class="dashboard-view active">
+        <div class="profile-card panel">
+          <div class="profile-header">
+            <div class="profile-avatar-wrap">
+              <label class="profile-upload" for="profileUpload" aria-label="Upload profile picture">
+                <img id="profileImage" src="" alt="Profile" />
+                <span class="upload-badge">+</span>
+              </label>
+              <input id="profileUpload" type="file" accept="image/*" />
+            </div>
+
+            <div class="profile-meta">
+              <p class="greeting-label">Bonjour</p>
+              <h2 id="greetingText">Bonjour, commerçant</h2>
+              <input id="merchantName" type="text" value="Commerçant" placeholder="Votre nom" />
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="stat-card panel">
+            <span class="stat-label">Daily Sales</span>
+            <strong id="dailySalesValue">0 DZD</strong>
+            <small>Ventes du jour</small>
+          </article>
+
+          <article class="stat-card panel">
+            <span class="stat-label">Pending Orders</span>
+            <strong id="pendingOrdersValue">0</strong>
+            <small>Commandes en attente</small>
+          </article>
+
+          <article class="stat-card panel">
+            <span class="stat-label">Total Orders</span>
+            <strong id="totalOrdersValue">0</strong>
+            <small>Commandes enregistrées</small>
+          </article>
+        </div>
+
+        <div class="analytics-panel panel">
+          <div class="analytics-header">
+            <h3>Top-selling products</h3>
+          </div>
+          <div id="topProductsList" class="top-products-list"></div>
+        </div>
+      </section>
+
+      <main id="ordersView" class="layout hidden">
+        <section class="panel parser-panel">
+          <h2 data-i18n="messageClient">Message client</h2>
+
+          <textarea
+            id="messageInput"
+            rows="8"
+            data-i18n-placeholder="messagePlaceholder"
+            placeholder="Exemple: Habit nechri 2 kisan, esmi Ahmed, tel 0555xxxxxx, Blida, commune Boufarik, livraison à domicile"
+          ></textarea>
+
+          <div class="button-row">
+            <button id="parseButton" class="primary" type="button" data-i18n="parseMessage">Analyser le message</button>
+            <button id="resetButton" class="secondary" type="button" data-i18n="newOrder">Nouveau</button>
+          </div>
+
+          <form id="orderForm">
+            <div class="field-grid">
+              <label>
+                <span data-i18n="customerName">Nom client</span>
+                <input id="customerName" name="customerName" type="text" data-i18n-placeholder="customerNamePlaceholder" placeholder="Nom complet" />
+              </label>
+
+              <label>
+                <span data-i18n="phone">Téléphone</span>
+                <input id="phoneNumber" name="phoneNumber" type="tel" data-i18n-placeholder="phonePlaceholder" placeholder="0555xxxxxx" />
+              </label>
+
+              <label>
+                <span data-i18n="wilaya">Wilaya</span>
+                <select id="wilaya" name="wilaya"></select>
+              </label>
+
+              <label>
+                <span data-i18n="commune">Commune</span>
+                <input id="commune" name="commune" type="text" data-i18n-placeholder="communePlaceholder" placeholder="Commune" />
+              </label>
+
+              <label>
+                <span data-i18n="email">Email</span>
+                <input id="email" name="email" type="email" placeholder="email@example.com" />
+              </label>
+
+              <label>
+                <span data-i18n="address">Adresse</span>
+                <input id="address" name="address" type="text" placeholder="Adresse complète" />
+              </label>
+
+              <label>
+                <span data-i18n="deliveryType">Type de livraison</span>
+                <select id="deliveryType" name="deliveryType">
+                  <option value="Home Delivery" data-i18n="homeDelivery">À domicile</option>
+                  <option value="Stop Desk" data-i18n="stopDesk">Bureau</option>
+                </select>
+              </label>
+
+              <label>
+                <span data-i18n="subtotal">Sous-total (DZD)</span>
+                <input id="subtotal" name="subtotal" type="number" min="0" step="1" value="0" />
+              </label>
+
+              <label>
+                <span data-i18n="shippingFee">Frais de livraison (DZD)</span>
+                <input id="shippingFee" name="shippingFee" type="number" min="0" step="1" readonly />
+              </label>
+
+              <label>
+                <span data-i18n="total">Total (DZD)</span>
+                <input id="total" name="total" type="number" min="0" step="1" readonly />
+              </label>
+            </div>
+
+            <label>
+              <span data-i18n="items">Articles / détails</span>
+              <textarea id="itemsText" rows="4" data-i18n-placeholder="itemsPlaceholder" placeholder="2 kits, 1 parfum, 3 savon..."></textarea>
+            </label>
+
+            <div class="field-grid compact">
+              <label>
+                <span data-i18n="statusLabel">Statut</span>
+                <select id="status" name="status">
+                  <option value="Pending" data-i18n="pendingStatus">En attente</option>
+                  <option value="Shipped" data-i18n="shippedStatus">Expédiée</option>
+                  <option value="Delivered" data-i18n="deliveredStatus">Livrée</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="button-row right">
+              <button class="primary" type="submit" data-i18n="saveOrder">Enregistrer la commande</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel orders-panel">
+          <div class="orders-header">
+            <h2 data-i18n="savedOrders">Commandes sauvegardées</h2>
+            <button id="exportButton" class="secondary" type="button" data-i18n="exportCsv">Exporter CSV</button>
+          </div>
+
+          <div id="ordersSummary" class="orders-summary"></div>
+          <div id="ordersList" class="orders-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./parser.js"></script>
+    <script src="./deliveryFees.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
